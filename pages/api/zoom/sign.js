@@ -1,37 +1,27 @@
-const KJUR = require('jsrsasign')
-// https://www.npmjs.com/package/jsrsasign
+const crypto = require('crypto') // crypto comes with Node.js
 
-function generateVideoToken(sdkKey, sdkSecret, topic, password = "") {
-  let signature = "";
-  // try {
-  const iat = Math.round(new Date().getTime() / 1000);
-  const exp = iat + 60 * 60 * 2;
+function generateSignature(apiKey, apiSecret, meetingNumber, role) {
 
-  // Header
-  const oHeader = { alg: "HS256", typ: "JWT" };
-  // Payload
-  const oPayload = {
-    app_key: sdkKey,
-    iat,
-    exp,
-    tpc: topic,
-    pwd: password,
-  };
-  // Sign JWT
-  const sHeader = JSON.stringify(oHeader);
-  const sPayload = JSON.stringify(oPayload);
-  signature = KJUR.jws.JWS.sign("HS256", sHeader, sPayload, sdkSecret);
-  return signature;
+  // Prevent time sync issue between client signature generation and zoom 
+  const timestamp = new Date().getTime() - 30000
+  const msg = Buffer.from(apiKey + meetingNumber + timestamp + role).toString('base64')
+  const hash = crypto.createHmac('sha256', apiSecret).update(msg).digest('base64')
+  const signature = Buffer.from(`${apiKey}.${meetingNumber}.${timestamp}.${role}.${hash}`).toString('base64')
+
+  return signature
 }
 
-const KEY = process.env.SDK_KEY;
-const SECRET = process.env.SDK_SECRET; 
+const KEY = process.env.NEXT_PUBLIC_API_KEY;
+const SECRET = process.env.API_SECRET; 
 
 export default function handler(req, res) {
     try{
-        generateVideoToken(KEY,SECRET,req.body.topic, req.body.password);
+        const {topic} = JSON.parse(req.body);
+        console.log(KEY,SECRET)
+        const signature = generateSignature(KEY,SECRET,topic, 0);
+        res.json({signature});
     } catch (error) {
-        res.status(500).json({error:error.message});
+        res.status(500).send({error:error.message});
     }
   }
   

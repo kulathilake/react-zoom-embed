@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@zoomus/websdk": "^1.9.7",
     "firebase": "^8.8.0",
     "jsrsasign": "^10.3.0",
     "next": "11.0.1",

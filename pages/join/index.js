@@ -1,10 +1,32 @@
 import Head from "next/head";
+import { createRef } from "react";
 import Navigation from "../../components/navigation";
 import MeetingDetails from "../../components/zoom/MeetingDetails";
 import MeetingViewer from "../../components/zoom/MeetingViewer";
 import styles from '../../styles/Join.module.css';
+import "@zoomus/websdk/dist/css/bootstrap.css";
+import "@zoomus/websdk/dist/css/react-select.css";
 
 export default function JoinZoomMeeting(){
+    
+    const viewerRef = createRef();
+    const handleJoinMeeting = async (id,username,email,password) => {
+        const getSignature = (await import("../../helpers/zoom")).getSignature;
+        const joinMeeting = (await import("../../helpers/zoom")).joinMeeting;
+        try{
+            const signature = await getSignature(id,password);
+            if(signature){
+                joinMeeting(signature,id,username,email,password);
+                if(viewerRef.current){
+                    viewerRef.current.appendChild(document.getElementById('zmmtg-root'));
+                }
+                
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
     return (
         <div>
             <Head>
@@ -14,8 +36,8 @@ export default function JoinZoomMeeting(){
             </Head>
             <Navigation/>
             <main className={styles.container}>
-                <MeetingViewer/>
-                <MeetingDetails />
+                <MeetingViewer ref={viewerRef.current}/>
+                <MeetingDetails handleJoin={handleJoinMeeting}/>
             </main>
         </div>
     );
