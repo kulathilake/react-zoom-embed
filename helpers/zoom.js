@@ -29,6 +29,7 @@ export function joinMeeting(signature,id,username,email,password){
         disableCORP:  !window.crossOriginIsolated, // default    true,
         disableInvite: true,
         meetingInfo: [],
+        disablePreview:true,
         success: function(){
             ZoomMtg.join({
                 signature: signature,

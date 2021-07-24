@@ -17,7 +17,6 @@ const SECRET = process.env.API_SECRET;
 export default function handler(req, res) {
     try{
         const {topic} = JSON.parse(req.body);
-        console.log(KEY,SECRET)
         const signature = generateSignature(KEY,SECRET,topic, 0);
         res.json({signature});
     } catch (error) {

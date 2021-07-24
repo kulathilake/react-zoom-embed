@@ -1,8 +1,6 @@
 import styles from '../../styles/Meeting.module.css'
-export default function MeetingViewer({ref}) {
+export default function MeetingViewer({forwardRef}) {
     return (
-        <div className={styles.meetingViewer} ref={ref}>
-            Meeting Viewer
-        </div>
+        <div className={styles.meetingViewer} ref={forwardRef}></div>
     )
 }

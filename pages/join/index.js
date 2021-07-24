@@ -17,9 +17,8 @@ export default function JoinZoomMeeting(){
             const signature = await getSignature(id,password);
             if(signature){
                 joinMeeting(signature,id,username,email,password);
-                if(viewerRef.current){
-                    viewerRef.current.appendChild(document.getElementById('zmmtg-root'));
-                }
+                const root = document.getElementById('zmmtg-root')
+                viewerRef.current.append(root);
                 
             }
         } catch (error) {
@@ -36,7 +35,7 @@ export default function JoinZoomMeeting(){
             </Head>
             <Navigation/>
             <main className={styles.container}>
-                <MeetingViewer ref={viewerRef.current}/>
+                <MeetingViewer forwardRef={viewerRef}/>
                 <MeetingDetails handleJoin={handleJoinMeeting}/>
             </main>
         </div>
