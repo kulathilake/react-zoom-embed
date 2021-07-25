@@ -1,1 +1,0 @@
-/** Adds or Removes a meeting attendee to/from a meeting */

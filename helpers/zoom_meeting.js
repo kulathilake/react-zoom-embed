@@ -1,27 +1,12 @@
 import { ZoomMtg } from "@zoomus/websdk";
+import axios from "axios";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
-ZoomMtg.setZoomJSLib('node_modules/@zoomus/websdk/dist/lib', '/av'); 
+ZoomMtg.setZoomJSLib('/node_modules/@zoomus/websdk/dist/lib', '/av'); 
 ZoomMtg.preLoadWasm();
 ZoomMtg.prepareJssdk(); 
 console.log(JSON.stringify(ZoomMtg.checkSystemRequirements()));
 
 
-
-export function getSignature(topic, password) {
-    return fetch('/api/zoom/sign',{
-        method: 'POST',
-        body: JSON.stringify({
-            topic,
-        })
-    })
-    .then(res=>res.json())
-    .then(res=>{
-        return res.signature;
-    })
-    .catch(err=>{
-        console.error(err);
-    })
-}
 
 export function joinMeeting(signature,id,username,email,password){
     ZoomMtg.init({
@@ -30,6 +15,7 @@ export function joinMeeting(signature,id,username,email,password){
         disableInvite: true,
         meetingInfo: [],
         disablePreview:true,
+        
         success: function(){
             ZoomMtg.join({
                 signature: signature,
@@ -40,7 +26,9 @@ export function joinMeeting(signature,id,username,email,password){
                 apiKey: API_KEY,
                 success: function() {
                     console.debug("Joined Meeting");
-                    ZoomMtg.getAttendeeslist({});
+                    ZoomMtg.getAttendeeslist({
+                        success: console.log
+                    });
                     ZoomMtg.getCurrentUser({
                       success: function (res) {
                         console.log("success getCurrentUser", res.result.currentUser);
@@ -49,11 +37,20 @@ export function joinMeeting(signature,id,username,email,password){
                 },
                 error: function(error){
                     console.error(error);
-                }
+                },
             })
         },
         error: function(error){
             console.log(error);
-        }
+        },
+        
     })
+    
+    ZoomMtg.inMeetingServiceListener('onUserJoin', function (data) {
+        console.log('inMeetingServiceListener onUserJoin', data);
+    });
+
 }
+
+
+

@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
 import { isAuthenticated } from "../helpers/zoom_auth"
 import Router from 'next/router';
+import "../node_modules/@zoomus/websdk/dist/css/bootstrap.css";
+import "../node_modules/@zoomus/websdk/dist/css/react-select.css"
+
 
 function MyApp({ Component, pageProps }) {
   const [loggedIn,setLoggedIn] = useState(false);

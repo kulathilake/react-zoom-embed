@@ -1,7 +1,7 @@
 import Head from "next/head";
 import axios from 'axios';
 import Router from 'next/router';
-const CLIENT_ID = process.env.NEXT_PUBLIC_API_KEY;
+const CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_ID;
 const REDIRECT_URL = process.env.NEXT_PUBLIC_AUTH_REDIRECT || 'http://localhost:3000/login';
 import {requestUserAuthorization, setLocalTokens} from '../helpers/zoom_auth'
 import { useEffect, useState } from "react";
@@ -54,7 +54,7 @@ export async function getServerSideProps(ctx){
     
     if(code){
         const params = new URLSearchParams();
-        const token = Buffer.from(CLIENT_ID+":"+process.env.API_SECRET).toString('base64');
+        const token = Buffer.from(CLIENT_ID+":"+process.env.CLIENT_SECRET).toString('base64');
         params.set('grant_type','authorization_code');
         params.set('code',code);
         params.set('redirect_uri',REDIRECT_URL);
