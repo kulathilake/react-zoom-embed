@@ -14,12 +14,12 @@ export default async function handler(req,res){
         })).data;
         
         // Check if the current user is host of given meeting.
-        db.isHost({meetingId,uid:id},function(err,isHost){
+        db.isHost({meetingId,uid:id},function(err,isRequestorHost){
             if(err){
                 console.log(err);
                 res.status(401).send("Authorization Failed");
-            }else if(isHost){
-                addAttendeeToMeeting({meetingId,uid,email},res);
+            }else if(isRequestorHost){
+                addAttendeeToMeeting({meetingId,uid,email,isHost},res);
             }else{
                 res.status(401).send("Unauthorized Action")
             }

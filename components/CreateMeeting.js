@@ -20,9 +20,10 @@ export default function CreateMeeting(){
                 const uid = localStorage.getItem('user_id');
                 const email = localStorage.getItem('email')
                 addMeetingAttendee({
-                    meeting_id:res.meetingId,
+                    meetingId:res.meetingId,
                     userId:  uid,
-                    email: email
+                    email: email,
+                    isHost: true
                 })
                 .then(res=>{
                     console.log(res);

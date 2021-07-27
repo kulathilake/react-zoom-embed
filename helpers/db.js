@@ -121,6 +121,36 @@ class DB{
             }
         })
     }
+
+    deleteAttendee(id,callback){
+        this.connection.query("DELETE FROM `attendees` WHERE id="+`'${id}'`,function(err,data){
+            if(err){
+                callback(err,null);
+            }else{
+                callback(null,data);
+            }
+        })
+    }
+
+    updateIsAllowed({id,isAllowed},callback){
+        this.connection.query("UPDATE `attendees` SET `isAllowed`="+`${isAllowed}` + " WHERE `id`="+ `'${id}'` ,function(err,data){
+            if(err){
+                callback(err,null);
+            }else{
+                callback(null,data);
+            }
+        })
+    }
+
+    updateIsHost({id,isHost},callback){
+        this.connection.query("UPDATE `attendees` SET `isHost`="+`${isHost}` + " WHERE `id`="+ `'${id}'` ,function(err,data){
+            if(err){
+                callback(err,null);
+            }else{
+                callback(null,data);
+            }
+        })
+    }
 }
 
 export default new DB();

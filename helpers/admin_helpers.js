@@ -58,14 +58,50 @@ export async function listMeetingAttendees(meetingId,limit=8,offset=0){
     }
 }
 
-export async function removeAttendee(id){
+export async function removeAttendee(meetingId,id){
+    try {
+        const accessToken = localStorage.getItem('accessToken');
+        return (await axios.delete(`/api/meeting/${meetingId}/attendee/${id}/remove`,{
+            headers:{
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })).data;
 
+    } catch (error) {
+        console.log(error);
+    }
 }
 
-export async function toggleAccess(id,access){
+export async function toggleAccess(meetingId,id,isAllowed){
+    try {
+        const accessToken = localStorage.getItem('accessToken');
+        const body = {
+            isAllowed
+        }
+        return (await axios.put(`/api/meeting/${meetingId}/attendee/${id}/access`,body,{
+            headers:{
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })).data;
 
+    } catch (error) {
+        console.log(error);
+    }
 }
 
-export async function toggleIsHost(id,isHost){
+export async function toggleIsHost(meetingId,id,isHost){
+    try {
+        const accessToken = localStorage.getItem('accessToken');
+        const body = {
+            isHost
+        }
+        return (await axios.put(`/api/meeting/${meetingId}/attendee/${id}/host`,body,{
+            headers:{
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })).data;
 
+    } catch (error) {
+        console.log(error);
+    }
 }

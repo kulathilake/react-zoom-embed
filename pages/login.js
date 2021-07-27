@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 export default function LoginPage(props){
     const {error, accessToken, refreshToken, expiresIn, isAuthenticated} = props;
-    const [meeting,setMeeting] = useState(null);
+    const [state,setState] = useState(null);
     useEffect(()=>{
         if(!isAuthenticated){          
             if(accessToken&&refreshToken&&expiresIn){
@@ -18,16 +18,21 @@ export default function LoginPage(props){
             }
         } else {
             const state = Router.query.state;
-            if(state){
+            if(state && state==='admin'){
+                Router.push(`/admin`)
+            }else if(state){
                 Router.push(`/join/${state}`)
             }
         }
-    },[error,accessToken,refreshToken,expiresIn,isAuthenticated,meeting]);
+    },[error,accessToken,refreshToken,expiresIn,isAuthenticated,state]);
 
     useEffect(()=>{
         const meeting_ = Router.query.meeting;
+        const admin = Router.query.admin;
         if(meeting_){
-            setMeeting(meeting_);
+            setState(meeting_);
+        }else if(admin){
+            setState('admin');
         }
     },[]);
 
@@ -43,7 +48,7 @@ export default function LoginPage(props){
                 <p>This application uses your Zoom Account Details to authorize you to the meetings. 
                    Please click the button below to Connect.
                 </p>
-                <button onClick={()=>requestUserAuthorization(meeting)}>Connect</button>
+                <button onClick={()=>requestUserAuthorization(state)}>Connect</button>
             </main>
         </div>
     )

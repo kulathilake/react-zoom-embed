@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { isAuthenticated } from "../helpers/zoom_auth"
 import Router from 'next/router';
+import '../styles/globals.css';
 import "../node_modules/@zoomus/websdk/dist/css/bootstrap.css";
 import "../node_modules/@zoomus/websdk/dist/css/react-select.css"
 

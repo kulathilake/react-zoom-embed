@@ -35,14 +35,48 @@ export default function AttendeeList(props){
         {
             name: 'Action',
             cell: function takeAction(row){
-                return <div >
-                    <button onClick={()=>removeAttendee(row.id)} >Remove</button>
-                    <button onClick={()=>toggleAccess(row.id,row.isAllowed)}>{row.isAllowed?"Revoke Access":"Grant Access"}</button>
-                    <button onClick={()=>toggleIsHost(row.id,row.isHost)}>{row.isHost?"Make Participant":"Make Host"}</button>
-                </div>
+                if(props.actions){              
+                    return <div >
+                        {!row.isHost&&<>  
+                        <button onClick={()=>handleRemove(row)}>Remove</button>
+                        <button onClick={()=>handleToggleAccess(row)}>{row.isAllowed?"Revoke Access":"Grant Access"}</button>
+                        </>}
+                        <button onClick={()=>handleToggleHost(row)}>{row.isHost?"Make Participant":"Make Host"}</button>
+                    </div>
+                }else{
+                    return <p>Not allowed during meeting.</p>
+                }
             }
         }
     ]
+
+    const handleRemove = (row) => {
+        if(row.isHost){
+            alert("Cannot remove host");
+            return;
+        }
+        removeAttendee(row.meeting_id,row.id)
+        .then(()=>{
+            props.setRefresh(true);
+        })
+        .catch(console.error);
+    }
+
+    const handleToggleAccess = (row) => {
+        toggleAccess(row.meeting_id,row.id,!row.isAllowed)
+        .then(()=>{
+            props.setRefresh(true);
+        })
+        .catch(console.error);
+    }
+
+    const handleToggleHost = (row) => {
+        toggleIsHost(row.meeting_id,row.id,!row.isHost)
+        .then(()=>{
+            props.setRefresh(true);
+        })
+        .catch(console.error)
+    }
 
     useEffect(()=>{
         const id = Router.query.id || props.id;
