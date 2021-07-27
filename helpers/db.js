@@ -50,6 +50,77 @@ class DB{
         })
     }
 
+    isUserAdmin(uid,callback){
+        this.connection.query(`SELECT COUNT() from admins WHERE admins.uid - '${uid}' `,function(err,results){
+            if(err){
+                callback(err,null);
+            }else{
+                if(data && data.length){
+                    callback(true);
+                } else {
+                    callback(false);
+                }
+            }
+        })
+    }
+
+    protectMeeting({meeting_id,zoomId, zoomPass, zoomLink,uid},callback){
+        this.connection.query("INSERT INTO `meetings` (`meeting_id`,`zoom_id`,`password`,`join_url`,`createdBy`) VALUES " + ` ('${meeting_id}','${zoomId}','${zoomPass}','${zoomLink}','${uid}')`,function(err,data){
+            if(err){
+                callback(err,null);
+            }else{
+                callback(null,data);
+            }
+        })
+    }
+
+    isHost({meetingId,uid},callback){
+        this.connection.query(`SELECT COUNT(*) FROM attendees WHERE meeting_id='${meetingId}' AND user_id='${uid}' AND isHost=${true}`,
+        function(err,data){
+            if(err){
+                callback(err,null);
+            }else{
+                if(data && data.length){
+                    callback(null,true);
+                }else{
+                    callback(null,false);
+                }
+            }
+        })
+    }
+
+    addAttendee({meetingId, uid, isHost,email},callback){
+        this.connection.query("INSERT INTO `attendees` (`meeting_id`,`user_id`,`isHost`,`isAllowed`,`isLive`,`email`) VALUES" + `('${meetingId}','${uid}',${isHost}, ${true}, ${false},'${email}')`,
+        function(err,data){
+            if(err){
+                callback(err,null);
+            } else{
+                callback(null,data);
+            }
+        })
+    }
+
+    getAttendees({meetingId,uid,limit,offset,},callback){
+        this.connection.query("SELECT * FROM `attendees` WHERE " + `meeting_id='${meetingId}' LIMIT ${limit} OFFSET ${offset}`,
+        function(err,data){
+            if(err){
+                callback(err,null);
+            } else {
+                callback(null,data);
+            }
+        })
+    }
+
+    getAttendeesCount({meetingId},callback){
+        this.connection.query("SELECT COUNT(*) as total FROM `attendees` WHERE " + `meeting_id='${meetingId}'`,
+        function(err,data){
+            if(err){
+                callback(err,null);
+            } else {
+                callback(null,data);
+            }
+        })
+    }
 }
 
 export default new DB();

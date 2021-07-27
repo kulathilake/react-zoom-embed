@@ -12,6 +12,7 @@ function MyApp({ Component, pageProps }) {
     const path = Router.pathname;
     const isLogin = path.match('login');
     const isJoin = path.match('join');
+    const isAdmin = path.match('admin');
     const {index} = Router.query;
 
     isAuthenticated()
@@ -21,6 +22,8 @@ function MyApp({ Component, pageProps }) {
         setLoggedIn(false);
         if(!isLogin && isJoin && index){
           Router.push('/login?meeting='+index);
+        } else if(!isLogin && isAdmin) {
+          Router.push('/login?admin=1');
         }
       }
     })
