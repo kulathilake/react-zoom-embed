@@ -9,7 +9,7 @@ class DB{
         });
 
         this.connection.connect(function(err){
-            if(err) throw err;
+            if(err) console.log(error.message);
             console.log('Database Connected')
         })
     }
